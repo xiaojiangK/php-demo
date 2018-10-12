@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="images/js/jquery.min.js"></script>
+	</head>
+	<body>
+		<h2>注册</h2>
+		<form action="index.php" method="get">
+			<ul>
+				<li>
+					<label for="username">用户名</label>
+					<input type="text" id="username" name="username" />
+				</li>
+				<li>
+					<label for="password">密码</label>
+					<input type="text" id="password" name="password" />
+				</li>
+				<li>
+					<label for="email">email</label>
+					<input type="text" id="email" name="email" />
+				</li>
+				<li>
+					<input type="submit" value="注册" name="submit" />
+				</li>
+			</ul>
+		</form>
+
+		
+		<h2>登录</h2>
+		<form action="index.php" method="get">
+			<ul>
+				<li>
+					<label for="username">用户名</label>
+					<input type="text" id="username" name="username" />
+				</li>
+				<li>
+					<label for="password">密码</label>
+					<input type="text" id="password" name="password" />
+				</li>
+				<li>
+					<input type="submit" value="登录" name="submit" />
+				</li>
+			</ul>
+		</form>
+	
+		<ul id="ul" style="width:640px; margin: -260px auto; overflow: hidden;"></ul>
+
+		<script>
+			console.time('hello');
+			$.ajax({       
+					type:"get",
+					url:"youyouwang.php?info=1",
+					async:true,
+					success : function (data){
+						
+						var d = JSON.parse(data);
+						var oUl = document.getElementById('ul');
+						var html = '';
+						
+						for(var i=0; i<d.length; i++){
+							html += '<li>'+ d[i].content +' <p>发布时间:'+ d[i].time +'</p></li>'
+						}
+						oUl.innerHTML = html;
+					}
+				});
+			console.timeEnd('hello');
+		</script>
+
+	</body>
+</html>

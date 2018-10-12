@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>JQuery_ajax</title>
+<meta charset="utf-8" />
+<script src="jquery-1.10.1.min.js"></script>
+</head>
+<body>
+	<input type="button" value="异步加载数据" />
+
+	<script type="text/javascript">
+$(function(){
+	
+	$("input").click(function(){
+		/* load()方法是局部方法. 
+		可以三个参数:url(必须,请求html文件的url地址,参数类型为string)/
+		data(可选,发送的key/value数据,参数类型为Object)/
+		callback(可选,成功或失败的回调函数,参数类型为函数function)
+		*/
+		//可以筛选数据,使用方便
+		$("#box").load("test.php"); 
+	});
+
+});
+</script>
+</body>
+</html>

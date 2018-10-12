@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" content="text/html">
+<title></title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+}
+
+ul {
+	width: 400px;
+	height: 400px;
+	border: 1px solid red;
+	padding: 10px 15px;
+	overflow: auto;
+}
+
+ul li {
+	height: 30px;
+	border-bottom: 1px dashed #ccc;
+	list-style: none;
+	line-height: 30px;
+}
+
+ul li a {
+	color: #369;
+	text-decoration: none;
+}
+
+ul li a:hover {
+	color: red;
+	text-decoration: underline;
+}
+
+ul li span {
+	float: right;
+}
+</style>
+</head>
+<body>
+	<script type="text/javascript">
+/*	window.onload=function(){
+		var oBtn=document.getElementById('btn');
+		var op=document.getElementsByTagName('p')[0];
+
+		oBtn.onclick=function(){
+
+			var xhy=null;
+
+			try{
+				xhy=new XMLHttpRequest();
+			}catch(e){
+				xhy=new ActiveXObject('Microsoft.XMLHTTP')
+			}
+
+			xhy.open('get','0.GET.php?username=leo&age=16',true);
+
+			xhy.send();
+
+			xhy.onreadystatechange=function(){
+				if(xhy.readyState==4){
+					if(xhy.status==200){
+						alert(xhy.responseText);
+					}else{
+						alert('出错了:'+xhy.status);
+					}
+				}
+			}
+
+		}
+	}*/
+
+	window.onload=function(){
+		var oBtn=document.getElementById('btn');
+
+		oBtn.onclick=function(){
+
+			var xhy=null;
+
+			try{
+				xhy=new XMLHttpRequest();
+			}catch(e){
+				xhy=new ActiveXObject('Mircosoft.XMLHTTP');
+			}
+
+			xhy.open('get','4.getNews.php',true);
+
+			xhy.send();
+
+			xhy.onreadystatechange=function(){
+				if(xhy.readyState==4){
+					if(xhy.status==200){
+						var oUl=document.getElementById('ull');
+						var html="";
+						var data=JSON.parse(xhy.responseText);
+
+						for(var i=0; i<data.length; i++){
+							html+='<li><a href="#">'+data[i].title+'</a> <span>['+data[i].date+']</span></li>'
+						}
+
+						oUl.innerHTML=html;
+					}else{
+						alert('出错了:'+xhy.status);
+					}
+1				}
+			}
+
+		}
+	}
+
+</script>
+	<input type="button" value="提交" id="btn" />
+	<ul id="ull"></ul>
+</body>
+</html>

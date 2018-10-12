@@ -1,0 +1,68 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+</head>
+<body>
+<script type="text/javascript">
+	//获取Cookie的方法
+	function getCookie(key) {
+		var arr1 = document.cookie.split(';');
+		for (var i=0; i<arr1.length; i++) {
+			var arr2 = arr1[i].split('=');
+			if (arr2[0]==key) {
+				return arr2[1];
+			}
+		}
+	}
+	//设置Cookie的方法
+	function setCookie(name,value,iDay){
+		var  oDate=new Date();
+		oDate.setDate(oDate.getDate()+iDay);
+		document.cookie=name+'='+value+';expires='+oDate;
+	}
+	//删除Cookie的方法
+	function removeCookie(name){
+		setCookie(name,'1',-1);
+	}
+	
+	window.onload=function(){
+		var oForm=document.getElementById("form");
+		var oUser=document.getElementsByName("user")[0];
+		var logOut=document.getElementById('a');
+		var oP=document.getElementById("p");
+
+		
+		newUserName();
+		
+		function newUserName(){
+			if(getCookie('userName')){
+				oP.innerHTML="欢迎:"+getCookie('userName');
+				oForm.style.display="none";
+				logOut.innerHTML="退出登录";
+			}else if(!getCookie('userName')){
+				oP.innerHTML="<a href='javascript:;'>请登录!</a>";
+				oForm.style.display="block";
+				logOut.style.display="none";
+			}
+		}
+		
+		logOut.onclick=function(){
+			removeCookie('userName');
+			newUserName();
+		}
+		
+		oForm.onsubmit=function(){
+			newUserName();
+			setCookie('userName',oUser.value,1);
+		};
+	
+	}
+
+</script>
+
+<form id="form" action="">用户名:<input type="text" name="user" /> 密码:<input type="text" name="pass" /> <input type="submit" value="登录" id="btn" /></form>
+<a href="javascript:;" id="a"></a>
+<p id="p"></p>
+</body>
+</html>

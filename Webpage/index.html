@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<style type="text/css">
+	table{width:100%;}
+	#customers
+	  {
+	  font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	  width:100%;
+	  border-collapse:collapse;
+	  text-align: center;
+	  }
+	input{
+		outline: none;
+	}
+	#customers td input{
+		width:100%;
+	}
+	.main td input{
+		display: none;
+	}
+	#customers td, #customers th 
+	  {
+	  font-size:1em;
+	  border:1px solid #98bf21;
+	  padding:3px 7px 2px 7px;
+	  }
+
+	#customers th 
+	  {
+	  font-size:1.1em;
+	  text-align:left;
+	  padding-top:5px;
+	  padding-bottom:4px;
+	  background-color:#A7C942;
+	  color:#ffffff;
+	  }
+
+	#customers tr.alt td 
+	  {
+	  color:#000000;
+	  background-color:#EAF2D3;
+	  }
+	  .botton{
+	  	padding-top: 20px;
+	  	text-align: center;
+	  	height: 50px;
+	  	width: 400px;
+	  	margin: auto;
+	  	line-height: 50px;
+	  }
+	  .btn{
+	  	background-color:#A7C942;
+	  	border: none;
+	  	width: 50px;
+	  	height: 30px;
+	  	color: white;
+	  	font-weight: bold;
+	  	float: left;
+	  	margin-left: 10px;
+	  }
+	  .pageIndex,.pageSize{
+	  	background-color: transparent;
+	  	width: 50px;
+	  	height: 30px;
+	  	border:1px solid #A7C942;
+	  	color: #A7C942;
+	  	line-height: 30px;
+	  }
+	</style>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript">
+		var index=0;	// 当前页数
+		var size=5;		// 一页显示数量
+		var total=0;	// 总数
+		$(document).ready(function () {
+			ajax();
+		});
+			function ajax(){
+				$.ajax({
+					url:"index.php",//跳转的地址
+					data:"pageIndex="+(index*size)+"&pageSize="+size,//提交的数据
+					type:"post",//提交的类型
+					datatype:"json",//返回的数据类型
+					success:function(data){
+						var json=eval("("+data+")");//将返回的数据转化成json
+							total=json[0].row;
+							$(".pageIndex").text("第"+(index+1)+"页");
+							$(".pageSize").text("共"+Math.ceil(total/size)+"页");
+						var list="";
+							list+='<tr><th>用户名</th>';
+							list+='<th>年龄</th>';
+							list+='<th>QQ</th>';
+							list+='<th>email</th>';
+							list+='<th>Tel</th>';
+							list+='<th>job</th>';
+							list+='<th>上传时间</th>';
+							list+='<th>操作</th></tr>';
+						for(var i=1;i<json.length;i++){
+							list+='<tr>';
+							list+='<td><span data-type="username">'+json[i].username+'</span><input type="text" name="username" /></td>';
+							list+='<td><span data-type="age">'+json[i].age+'</span><input type="text" name="age" /></td>';
+							list+='<td><span data-type="QQ">'+json[i].QQ+'</span><input type="text" name="QQ" /></td>';
+							list+='<td><span data-type="email">'+json[i].email+'</span><input type="text" name="email" /></td>';
+							list+='<td><span data-type="tel">'+json[i].tel+'</span><input type="text" name="tel" /></td>';
+							list+='<td><span data-type="job">'+json[i].job+'</span><input type="text" name="job" /></td>';
+							list+='<td><span data-type="time">'+json[i].time+'</span><input type="text" name="time" /></td>';
+							list+='<td class="x"><a href="javascript:;" class="remove" data-id="'+json[i].id+'">删除</a></td>';
+							list+='</tr>';
+						}
+						$(".main").html('<table id="customers">'+list+'</table>');
+
+						// 删除
+						$('.remove').each(function() {
+							$(this).on('click', function (){
+								var id = $(this).attr('data-id');
+								$.ajax({
+									url: 'add.php',
+									type: 'post',
+									dataType: 'json',
+									data: 'remove=1&id='+id,
+									success: function (data){
+										if (data == 1) {
+											ajax();
+											alert("删除成功！");
+										}else{
+											alert("删除失败！");
+										}
+									}
+								});
+							})
+						});
+
+						//修改
+						var td = $('.main td:not(.x)');
+						$(td).each(function() {
+							$(this).dblclick(function (){
+								for (var i = 0; i < td.length; i++) {
+									$(td).eq(i).find('input').hide();
+									$(td).eq(i).find('span').show();
+								}
+								var val = $(this).find('span').text();
+								$(this).find('input').show().val(val);
+								$(this).find('span').hide();
+
+								// 监听盘键事件
+								$(this).find('input').keydown(function(ev) {  
+								    if(ev.which == 13) {
+								    	$(this).hide();
+										$(this).siblings('span').show();
+										var id = $(this).parent().siblings('.x').find('a').attr('data-id');
+										var type = $(this).siblings().attr('data-type');
+								   		var val = $(this).val();
+										$.ajax({
+											url: 'add.php',
+											type: 'post',
+											dataType: 'json',
+											data: 'updata=1&id='+id+'&type='+type+'&val='+val,
+											success: function (data){
+ 												if (data == 1) {
+ 													ajax();
+ 													alert('更新成功！');
+ 												}else{
+ 													alert('更新失败！')
+ 												}
+											} 	
+										});
+								    }else if(ev.which == 27){
+										$(this).hide();
+										$(this).siblings('span').show();
+								    }
+								}); 
+							})
+						});
+		
+					}
+				});
+			}
+			function indexs(){
+				index=0;
+				ajax();
+			}
+			function next(){
+				if(index<(Math.ceil(total/size)-1)){
+					index++;
+					ajax();
+				}
+			}
+			function back(){
+				if(index>0){
+					index--;
+					ajax();
+				}
+			}
+			function last(){
+				index=Math.ceil(total/size)-1;
+				ajax();
+			}
+
+	</script>
+</head>
+<body>
+<div class="main"></div>
+<div class="botton">
+	<input onclick="indexs()" class="btn indexs" type="button" value="首页" />
+	<input onclick="back()" class="btn back" type="button" value="上一页" />
+	<input onclick="next()" class="btn next" type="button" value="下一页" />
+	<input onclick="last()" class="btn last" type="button" value="尾页" />
+	<div class="btn pageIndex"></div>
+	<div class="btn pageSize"></div>
+</div>
+
+<table id="customers" class="customers">
+	<tr>
+		<th>用户名</th>
+		<th>年龄</th>
+		<th>QQ</th>
+		<th>email</th>
+		<th>Tel</th>
+		<th>job</th>
+		<th>操作</th>
+	</tr>
+	<tr>
+		<td><input type="text" placeholder="请输入用户名" value="admin" id="input" name="username" /></td>
+		<td><input type="text" placeholder="请输入年龄" value="18" id="input2" name="age" /></td>
+		<td><input type="text" placeholder="请输入QQ" value="740092856" id="input3" name="QQ" /></td>
+		<td><input type="email" placeholder="请输入email" value="740092856@qq.com" id="input4" name="email" /></td>
+		<td><input type="text" placeholder="请输入电话" value="110" id="input5" name="tel" /></td>
+		<td><input type="text" placeholder="请输入职业" value="110" id="input6" name="job" /></td>
+		<td><input type="submit" name="submit" value="添加" onclick="add()" /></td>
+	</tr>
+</table>
+
+<script type="text/javascript">
+	// 储存
+	var val = $('#input');
+	var val2 = $('#input2');
+	var val3 = $('#input3');
+	var val4 = $('#input4');
+	var val5 = $('#input5');
+	var val6 = $('#input6');
+
+	function add(){
+		$.ajax({
+			url: 'add.php',
+			type: 'post',
+			dataType: 'json',
+			data: 'add=1&username='+val[0].value+'&age='+val2[0].value+'&QQ='+val3[0].value+'&email='+val4[0].value+'&tel='+val5[0].value+'&job='+val6[0].value,
+			success: function (data){
+				if (data == 1) {
+					ajax();
+					alert("添加成功！");
+				}else{
+					alert("添加失败！");
+				}
+			}
+		});
+	}
+	
+</script>
+</body>
+</html>

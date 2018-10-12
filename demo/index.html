@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<style>
+		table {margin: 0 auto;}
+		.add { width: 400px; margin: 80px auto;}
+		ul,li {list-style: none; padding: 0; margin: 0; margin: 8px 0;}
+		.add label {width: 70px; display: inline-block; text-align: right; margin-right: 12px;}
+		.add input[type='button']{margin-left: 82px;}
+	</style>
+</head>
+<body>
+	<table cellpadding="8" cellspacing="0" border="1px">
+		<thead>
+			<tr>
+				<td>id</td>
+				<td>用户名</td>
+				<td>密码</td>
+				<td>邮箱</td>
+				<td>手机号</td>
+				<td>注册时间</td>
+				<td>操作</td>
+			</tr>
+		</thead>
+		<tbody class="tbody"></tbody>
+	</table>
+
+	<div class="add">
+		<ul>
+			<li>
+				<label for="username">用户名：</label>
+				<input type="text" class="username" name="username" />
+			</li>
+			<li>
+				<label for="username">密码：</label>
+				<input type="text" class="password" name="password" />
+			</li>
+			<li>
+				<label for="username">邮箱：</label>
+				<input type="text" class="email" name="email" />
+			</li>
+			<li>
+				<label for="username">手机号：</label>
+				<input type="text" class="phone" name="phone" />
+			</li>
+			<li>
+				<input type="button" onclick="add()" value="添加" />
+			</li>
+		</ul>
+	</div>
+
+
+	<script>
+
+		let html = '';
+		let tbody = $('.tbody'); 
+		
+		select();
+
+		function select() {
+			$.ajax({
+				url: 'data.php?type=select',
+				type: 'get',
+				async:true,
+				dataType: 'json',
+				success: function (res){
+					for (let i of res){
+						html += `<tr>
+										<td>${i.id}</td>
+										<td>${i.username}</td>
+										<td>${i.password}</td>
+										<td>${i.email}</td>
+										<td>${i.phone}</td>
+										<td>${i.reg_time}</td>
+										<td>
+											<a href="data.php?type=remove&id=${i.id}">删除</a>
+										</td>
+									</tr>`;
+					}
+					$(tbody).html(html);
+				}
+			});
+		}
+
+		function add() {
+			$.ajax({
+				url: 'data.php?type=add',
+				type: 'get',
+				async:true,
+				dataType: 'json',
+				data: 'username=' + $('.username').val() + '&password=' + $('.password').val() + '&email=' + $('.email').val() + '&phone=' + $('.phone').val(),
+				success: function (res){
+					console.log(res);
+				},
+				error: function (err){
+					document.write(err.responseText);
+				}
+			});
+		}
+
+
+	</script>
+</body>
+</html>

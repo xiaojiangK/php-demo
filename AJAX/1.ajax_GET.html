@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ajax异步交互数据</title>
+<meta charset="utf-8" />
+</head>
+<script type="text/javascript">
+	
+window.onload=function(){
+
+	var oBtn=document.getElementById('btn');
+
+	oBtn.onclick=function(){
+
+		var xhr=null;
+		try{
+			xhr=new XMLHttpRequest();
+		}catch(e){
+			xhr=new ActiveXObject('Microsoft.XMLHTTP');
+		}
+		/*
+			1.缓存 在ulr?后面连接一个随机数,时间戳
+			2.中文会乱码 编码encodeURL()
+		*/
+
+		xhr.open('get','1.GET.php?username='+encodeURI('伍江')+' & age=16 &' + new Date().getTime(),true);
+
+		xhr.send();
+
+		xhr.onreadystatechange=function(){
+
+			if(xhr.readyState==4){
+
+				if(xhr.status == 200){
+					alert(xhr.responseText);
+				}else{
+					alert('出错了,Err ：'+xhr.status);
+				}
+			}
+		}
+	}
+
+}
+
+</script>
+<body>
+	<input type="button" id="btn" value="按钮" />
+</body>
+</html>
