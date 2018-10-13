@@ -1,5 +1,5 @@
 <?php
-// 二维码2
+// 二维码
 header('Content-type:image/jpeg');
 $width = 120;
 $height = 40;
