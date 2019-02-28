@@ -2,7 +2,7 @@
 
 header('Content-type:text/html; charset:utf-8');
 
-class Person
+class Persons
 {
 	function __construct($name, $sex)
 	{
@@ -21,7 +21,7 @@ class Person
 	}
 }
 
-class Worker extends Person					//extends 代表Worker 是从 Person类的继承过来的
+class Worker extends Persons				//extends 代表Worker 是从 Persons类的继承过来的
 {
 	function __construct($name, $sex, $job)	//构造函数,把父类的属性传过来
 	{
